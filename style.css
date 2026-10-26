@@ -1,0 +1,542 @@
+/* ==========================================================================
+   ZenPomodoro - Design System & Modern Aesthetics
+   - Google Fonts: Outfit & JetBrains Mono
+   - Glassmorphism, Dynamic Ambient Gradients, Micro-animations
+   - Smooth Theme Transitions: Focus (Midnight Indigo) ↔ Break (Emerald Sage)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Common Palette */
+  --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Focus Mode Tokens (Default: Deep Midnight Indigo) */
+  --bg-gradient: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #0f172a 60%, #030712 100%);
+  --accent-color: #f97316; /* Energetic Coral Orange */
+  --accent-rgb: 249, 115, 22;
+  --accent-glow: rgba(249, 115, 22, 0.35);
+  --ring-color: #f97316;
+  --ring-bg: rgba(255, 255, 255, 0.07);
+
+  /* Card & Glass */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-hover: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+
+  /* Text Colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  /* Button Tokens */
+  --btn-pill-radius: 9999px;
+  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-theme: background 0.8s ease, border-color 0.8s ease, color 0.5s ease;
+}
+
+/* Break Mode Tokens (Deep Emerald & Sage Green) */
+body.mode-break {
+  --bg-gradient: radial-gradient(circle at 50% 20%, #064e3b 0%, #022c22 60%, #01130e 100%);
+  --accent-color: #10b981; /* Fresh Emerald Green */
+  --accent-rgb: 16, 185, 129;
+  --accent-glow: rgba(16, 185, 129, 0.35);
+  --ring-color: #10b981;
+}
+
+/* Base Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-gradient);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-theme);
+  overflow-x: hidden;
+  position: relative;
+  padding: 1.5rem;
+}
+
+/* Ambient Background Orb (Subtle light effect) */
+.ambient-orb {
+  position: fixed;
+  width: 650px;
+  height: 650px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -20%);
+  transition: background 0.8s ease, filter 0.8s ease;
+}
+
+/* Main Container */
+.app-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+/* Glass Card */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 32px;
+  box-shadow: var(--glass-shadow);
+  padding: 2.2rem;
+  transition: var(--transition-theme);
+}
+
+/* Header Area */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brand-icon {
+  font-size: 1.5rem;
+  display: inline-block;
+  animation: pulse-soft 3s infinite ease-in-out;
+}
+
+.brand-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 30%, var(--text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Session Counter Pill Badge */
+.stats-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--btn-pill-radius);
+  padding: 0.4rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.stats-count {
+  font-weight: 700;
+  color: var(--accent-color);
+  font-family: var(--font-mono);
+}
+
+.btn-reset-stats {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px 4px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: var(--transition-smooth);
+}
+
+.btn-reset-stats:hover {
+  color: #ef4444;
+  transform: rotate(-45deg);
+}
+
+/* Mode Indicator Tag */
+.mode-indicator-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.mode-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(var(--accent-rgb), 0.12);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
+  color: var(--accent-color);
+  padding: 0.45rem 1.2rem;
+  border-radius: var(--btn-pill-radius);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: var(--transition-smooth);
+}
+
+.mode-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-color);
+  animation: blink 2s infinite ease-in-out;
+}
+
+/* ==========================================================================
+   Central Circular Timer
+   ========================================================================== */
+.timer-center-wrap {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 0.5rem auto 1.5rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* Start at 12 o'clock */
+}
+
+.progress-ring-bg {
+  stroke: var(--ring-bg);
+  stroke-width: 9;
+}
+
+.progress-ring-circle {
+  stroke: var(--ring-color);
+  stroke-width: 9;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.8s ease;
+  filter: drop-shadow(0 0 12px var(--accent-glow));
+}
+
+.timer-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timer-digits {
+  font-family: var(--font-mono);
+  font-size: 4.2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
+.timer-subtext {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   Timer Control Buttons (Start, Pause, Reset)
+   ========================================================================== */
+.timer-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.btn-pill {
+  font-family: var(--font-main);
+  border-radius: var(--btn-pill-radius);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  transition: var(--transition-smooth);
+  user-select: none;
+  outline: none;
+}
+
+.btn-pill:hover {
+  background: var(--glass-hover);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.btn-pill:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Primary Main Button (Play / Pause) */
+.btn-primary-action {
+  padding: 0.9rem 2.2rem;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.85) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  box-shadow: 0 10px 25px var(--accent-glow);
+}
+
+.btn-primary-action:hover {
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 1) 0%, var(--accent-color) 100%);
+  box-shadow: 0 14px 30px var(--accent-glow);
+}
+
+/* Secondary Button (Reset) */
+.btn-secondary-action {
+  padding: 0.9rem 1.6rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.btn-secondary-action:hover {
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Ambient Sound Player Section
+   ========================================================================== */
+.sound-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 1.8rem;
+  border-radius: 28px;
+}
+
+.sound-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sound-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+/* Sound Selector Pills */
+.sound-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+}
+
+.btn-sound-track {
+  padding: 0.65rem 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  transition: var(--transition-smooth);
+}
+
+.btn-sound-track .track-icon {
+  font-size: 1.25rem;
+}
+
+.btn-sound-track:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
+.btn-sound-track.active {
+  background: rgba(var(--accent-rgb), 0.15);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(var(--accent-rgb), 0.2);
+}
+
+/* Volume Control Bar */
+.volume-control-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--btn-pill-radius);
+  padding: 0.6rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.btn-mute {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.btn-mute:hover {
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+.btn-mute.is-muted {
+  color: #ef4444;
+}
+
+/* Custom Sleek Slider */
+.volume-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.15);
+  outline: none;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-color);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.8s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-color);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.8s ease;
+}
+
+.volume-value-text {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ==========================================================================
+   Footer & Tips
+   ========================================================================== */
+.app-footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.footer-tip {
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+@keyframes blink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 500px) {
+  body {
+    padding: 1rem;
+  }
+
+  .glass-panel {
+    padding: 1.5rem;
+  }
+
+  .timer-center-wrap {
+    width: 250px;
+    height: 250px;
+  }
+
+  .timer-digits {
+    font-size: 3.5rem;
+  }
+
+  .sound-selector-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .btn-primary-action {
+    padding: 0.85rem 1.6rem;
+  }
+}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZenPomodoro | 몰입을 돕는 포모도로 타이머</title>
+  <meta name="description" content="25분 집중과 5분 휴식의 완벽한 밸런스, 앰비언트 백색소음과 함께하는 고품격 포모도로 타이머">
+  
+  <!-- Favicon (SVG Tomato Emoji) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍅</text></svg>">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Background Light Orb -->
+  <div class="ambient-orb" id="ambientOrb" aria-hidden="true"></div>
+
+  <!-- Main Application Wrapper -->
+  <main class="app-container">
+    
+    <!-- Upper Main Glass Card (Timer & Controls) -->
+    <section class="glass-panel" aria-label="포모도로 타이머">
+      
+      <!-- Top Bar: Brand & Session Counter -->
+      <header class="app-header">
+        <div class="brand">
+          <span class="brand-icon" aria-hidden="true">🍅</span>
+          <h1 class="brand-title">ZenPomodoro</h1>
+        </div>
+        
+        <!-- Persistent Session Counter Badge -->
+        <div class="stats-badge" title="완료한 세션 수와 총 몰입 시간입니다.">
+          <span>🏆 완료: <strong id="sessionCount" class="stats-count">0</strong>회 (<span id="totalMinutes">0</span>분)</span>
+          <button id="btnResetStats" class="btn-reset-stats" title="세션 기록 초기화" aria-label="기록 초기화">↺</button>
+        </div>
+      </header>
+
+      <!-- Current Session Mode Tag -->
+      <div class="mode-indicator-wrap">
+        <div class="mode-tag" id="modeTag">
+          <span class="mode-dot" aria-hidden="true"></span>
+          <span id="modeText">집중 시간 (25m)</span>
+        </div>
+      </div>
+
+      <!-- Central Circular Progress Ring & Large Clock -->
+      <div class="timer-center-wrap" role="timer" aria-live="polite">
+        <svg class="progress-ring-svg" viewBox="0 0 300 300" aria-hidden="true">
+          <!-- Background Track Circle -->
+          <circle 
+            class="progress-ring-bg" 
+            cx="150" 
+            cy="150" 
+            r="130" 
+            fill="transparent"
+          />
+          <!-- Dynamic Progress Bar Circle -->
+          <circle 
+            id="progressRing"
+            class="progress-ring-circle" 
+            cx="150" 
+            cy="150" 
+            r="130" 
+            fill="transparent"
+            stroke-dasharray="816.81"
+            stroke-dashoffset="0"
+          />
+        </svg>
+
+        <!-- Time Numbers in Center -->
+        <div class="timer-content">
+          <time id="timeDisplay" class="timer-digits">25:00</time>
+          <span id="timerStatusText" class="timer-subtext">집중에 몰입해 보세요</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="timer-controls">
+        <button id="btnToggle" class="btn-pill btn-primary-action" aria-label="타이머 시작">
+          <span id="toggleIcon">▶</span>
+          <span id="toggleText">시작</span>
+        </button>
+        <button id="btnReset" class="btn-pill btn-secondary-action" aria-label="타이머 초기화">
+          <span>↺</span>
+          <span>초기화</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Lower Sound Control Panel -->
+    <section class="glass-panel sound-panel" aria-label="앰비언트 백색소음 제어">
+      <div class="sound-panel-header">
+        <h2 class="sound-title">
+          <span>🎧</span>
+          <span>앰비언트 백색소음</span>
+        </h2>
+        <span id="currentSoundStatus" style="font-size: 0.8rem; color: var(--text-muted);">꺼짐</span>
+      </div>
+
+      <!-- Sound Preset Selector Grid -->
+      <div class="sound-selector-grid" role="group" aria-label="백색소음 선택">
+        <button class="btn-sound-track" data-sound="ocean" id="btnSoundOcean">
+          <span class="track-icon">🌬️</span>
+          <span>바람 소리</span>
+        </button>
+        <button class="btn-sound-track" data-sound="rain" id="btnSoundRain">
+          <span class="track-icon">🌧️</span>
+          <span>빗소리</span>
+        </button>
+        <button class="btn-sound-track" data-sound="birds" id="btnSoundBirds">
+          <span class="track-icon">🐦</span>
+          <span>숲속 새</span>
+        </button>
+        <button class="btn-sound-track active" data-sound="none" id="btnSoundNone">
+          <span class="track-icon">🔇</span>
+          <span>꺼짐</span>
+        </button>
+      </div>
+
+      <!-- Volume & Mute Controls -->
+      <div class="volume-control-wrap">
+        <button id="btnMute" class="btn-mute" aria-label="음소거 토글" title="음소거 토글">
+          <span id="muteIcon">🔊</span>
+        </button>
+        <input 
+          type="range" 
+          id="volumeSlider" 
+          class="volume-slider" 
+          min="0" 
+          max="100" 
+          value="70" 
+          aria-label="볼륨 조절"
+        />
+        <span id="volumeValue" class="volume-value-text">70%</span>
+      </div>
+    </section>
+
+    <!-- Keyboard Shortcuts / Info Footer -->
+    <footer class="app-footer">
+      <p class="footer-tip">💡 Tip: 스페이스바(시작/일시정지), R키(초기화), M키(음소거)</p>
+      <p>&copy; ZenPomodoro · 몰입과 휴식의 최적화</p>
+    </footer>
+
+  </main>
+
+  <!-- Sound Engine & App Controller -->
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
